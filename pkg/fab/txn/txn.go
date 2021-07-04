@@ -9,8 +9,10 @@ package txn
 
 import (
 	reqContext "context"
+	"fmt"
 	"math/rand"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-sdk-go/pkg/common/errors/multi"
 	"github.com/pkg/errors"
 
@@ -81,8 +83,14 @@ func New(request fab.TransactionRequest) (*fab.Transaction, error) {
 		return nil, err
 	}
 
+	// fmt.Println("SDK: Got randomization: ", request.Randomization)
+
+	randBytes, err := proto.Marshal(request.Randomization)
+	if err != nil {
+		fmt.Println("SDK: Cannot Marshal Randomization data to bytes")
+	}
 	// create a transaction
-	taa := &pb.TransactionAction{Header: hdr.SignatureHeader, Payload: capBytes}
+	taa := &pb.TransactionAction{Header: hdr.SignatureHeader, Payload: capBytes, Randomization: randBytes}
 	taas := make([]*pb.TransactionAction, 1)
 	taas[0] = taa
 

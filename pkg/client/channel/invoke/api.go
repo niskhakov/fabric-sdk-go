@@ -51,6 +51,7 @@ type Request struct {
 	// chain along with any collections, otherwise it may be omitted.
 	InvocationChain []*fab.ChaincodeCall
 	IsInit          bool
+	Randomization 	*pb.Randomization
 }
 
 //Response contains response parameters for query and execute transaction

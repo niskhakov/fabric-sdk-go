@@ -14,6 +14,7 @@ import (
 type TransactionRequest struct {
 	Proposal          *TransactionProposal
 	ProposalResponses []*TransactionProposalResponse
+	Randomization 		*pb.Randomization
 }
 
 // Sender provides the ability for a transaction to be created and sent.
