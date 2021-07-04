@@ -176,7 +176,7 @@ func (c *CommitTxHandler) Handle(requestContext *RequestContext, clientContext *
 	}
 	defer clientContext.EventService.Unregister(reg)
 
-	_, err = createAndSendTransaction(clientContext.Transactor, requestContext.Response.Proposal, requestContext.Response.Responses)
+	_, err = createAndSendTransaction(clientContext.Transactor, requestContext.Response.Proposal, requestContext.Response.Responses, requestContext.Request.Randomization)
 	if err != nil {
 		requestContext.Error = errors.Wrap(err, "CreateAndSendTransaction failed")
 		return
@@ -255,11 +255,12 @@ func getNext(next []Handler) Handler {
 	return nil
 }
 
-func createAndSendTransaction(sender fab.Sender, proposal *fab.TransactionProposal, resps []*fab.TransactionProposalResponse) (*fab.TransactionResponse, error) {
+func createAndSendTransaction(sender fab.Sender, proposal *fab.TransactionProposal, resps []*fab.TransactionProposalResponse, randData *pb.Randomization) (*fab.TransactionResponse, error) {
 
 	txnRequest := fab.TransactionRequest{
 		Proposal:          proposal,
 		ProposalResponses: resps,
+		Randomization:     randData,
 	}
 
 	tx, err := sender.CreateTransaction(txnRequest)
